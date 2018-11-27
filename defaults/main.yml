@@ -1,0 +1,31 @@
+---
+pwsec_host: {}
+pwsec_group: {}
+pwsec_common:
+  packages:
+    - libpam-pwquality
+  local_users_only: true
+  obscure: true
+  hashtype: sha512
+  # Prevent to use last N passwords as new one
+  remember: 400
+  # Minimal length of password. Calculated as minlen - <# of char types>
+  minlen: 16
+  # Count of allowed repeats like "aaaaa"
+  maxrepeat: 2
+  # Count of allowed repeats for the same class, like 'aaa' or 'AAA' or '555' or '@#^'
+  maxclassrepeat: 1
+  # Count of minimum different char classes
+  minclass: 2
+  # Minimum number of days allowed between password changes
+  pass_min_days: 0
+  # Number of days warning given before a password expires
+  pass_warn_age: 30
+  # Maximum number of days a password may be used
+  pass_max_days: 365
+  # Minimum difference between old and new password
+  difok: 5
+  # Overall - you tell me that defaults are so weak; and I tell you - please,
+  # read NIST SP 800-63B Section 5.1.1.2 recommendations first, then we talk.
+  # Here is a link for you: https://pages.nist.gov/800-63-3/sp800-63b.html#memsecretver
+

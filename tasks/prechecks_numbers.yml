@@ -1,0 +1,5 @@
+---
+- name: "Check for proper {{ param }} value"
+  fail:
+    msg: "Parameter {{ param }} should be a number"
+  when: pwsec[param] is not number

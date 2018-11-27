@@ -1,0 +1,71 @@
+---
+- name: Pwsec | Override default data with user one
+  set_fact:
+    pwsec: "{{ pwsec_common | combine(pwsec_group, pwsec_host, recursive=True) }}"
+  tags:
+    - always
+
+- name: Include preliminary checks
+  import_tasks: prechecks.yml
+
+- name: Install needed security packages
+  package:
+    name: "{{ pwsec.packages }}"
+    state: present
+
+- name: Ensure common-password file
+  template:
+    src: common-password
+    dest: /etc/pam.d/common-password
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Ensure maximum number of days a password may be used
+  lineinfile:
+    path: /etc/login.defs
+    state: present
+    regexp: '^PASS_MAX_DAYS.*'
+    line: 'PASS_MAX_DAYS {{ pwsec.pass_max_days }}'
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Ensure number of days warning given before a password expires
+  lineinfile:
+    path: /etc/login.defs
+    state: present
+    regexp: '^PASS_WARN_AGE.*'
+    line: 'PASS_WARN_AGE {{ pwsec.pass_warn_age }}'
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Ensure number of days allowed between password changes
+  lineinfile:
+    path: /etc/login.defs
+    state: present
+    regexp: '^PASS_MIN_DAYS.*'
+    line: 'PASS_MIN_DAYS {{ pwsec.pass_min_days }}'
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Create temporary dir for security scripts
+  tempfile:
+    prefix: ansible.sec
+    state: directory
+  register: sec_dir
+
+- name: Copy script to check current users password expiration settings
+  copy:
+    src: check_users.sh
+    dest: "{{ sec_dir.path }}/check_users.sh"
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Run expiration check for existing users
+  shell:
+    cmd: "{{ sec_dir.path }}/check_users.sh {{ pwsec.pass_max_days }} {{ pwsec.pass_warn_age }} {{ ansible_user }}"
+

@@ -1,0 +1,25 @@
+---
+- name: Check for proper obscure value
+  fail:
+    msg: "Obscure value should be either true or false"
+  when: pwsec.obscure not in (true, false)
+
+- name: Check for proper hashtype
+  fail:
+    msg: "Hashtype is not supported"
+  when: pwsec.hashtype not in ("sha512", "sha256", "blowfish")
+
+- name: Include numbers checks
+  include_tasks: prechecks_numbers.yml
+  loop:
+    - remember
+    - minlen
+    - maxrepeat
+    - maxclassrepeat
+    - minclass
+    - pass_min_days
+    - pass_warn_age
+    - pass_max_days
+    - difok
+  loop_control:
+    loop_var: param
