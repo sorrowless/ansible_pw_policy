@@ -66,6 +66,6 @@
     group: root
 
 - name: Run expiration check for existing users
-  shell:
-    cmd: "{{ sec_dir.path }}/check_users.sh {{ pwsec.pass_max_days }} {{ pwsec.pass_warn_age }} {{ ansible_user }}"
+  command: "{{ sec_dir.path }}/check_users.sh {{ pwsec.pass_max_days }} {{ pwsec.pass_warn_age }} {{ ansible_user }}"
+  changed_when: False
 
