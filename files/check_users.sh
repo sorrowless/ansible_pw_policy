@@ -3,6 +3,8 @@ DAYS_BETWEEN=$1
 DAYS_WARNING=$2
 EXCLUDED_USER=$3
 
+CHANGED=0
+
 if [ "$#" -ne 3 ]; then
     echo "Illegal number of parameters"
     exit 1
@@ -17,17 +19,21 @@ for user in $(egrep -v '(nologin|false)$' /etc/passwd | egrep -v "^${EXCLUDED_US
     echo -n "password of $user never expires, that's wrong... "
     chage -d 0 $user
     echo "Fixed."
+    CHANGED=2
   fi
   echo "$res" | egrep -q "Maximum number of days between password change.*${DAYS_BETWEEN}"
   if [ $? -ne 0 ]; then
     echo -n "password max days for $user is wrong... "
     chage -M $DAYS_BETWEEN $user 2>/dev/null
     echo "Fixed."
+    CHANGED=2
   fi
   echo "$res" | egrep -q "Number of days of warning before password expires.*${DAYS_WARNING}"
   if [ $? -ne 0 ]; then
     echo -n "password warning days for $user is wrong... "
     chage -W $DAYS_WARNING $user 2>/dev/null
     echo "Fixed."
+    CHANGED=2
   fi
 done
+exit $CHANGED

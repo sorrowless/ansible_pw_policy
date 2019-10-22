@@ -1,0 +1,20 @@
+#!/bin/bash
+TOKEN_ID='{{ pwsec.notify_tg_token_id }}'
+CHAT_ID='{{ pwsec.notify_tg_chat_id }}'
+EXT_IP=$(/usr/bin/curl ifconfig.me)
+EXT_IP_MSG="(external IP ${EXT_IP:-cannot be defined reliably})"
+
+
+SUBJECT="<i>${PAM_TYPE} on ${HOSTNAME} ${EXT_IP_MSG} from ${PAM_RHOST:-localhost}\n</i>"
+
+if [[ ${PAM_TYPE} == "open_session" ]]; then
+  ACTION_MSG="new session"
+elif [[ ${PAM_TYPE} == "close_session" ]]; then
+  ACTION_MSG="session close"
+else
+  ACTION_MSG="${PAM_TYPE}"
+fi
+
+MESSAGE="Detected ${ACTION_MSG} on ${HOSTNAME} as <b>${PAM_USER}</b> from ${PAM_RHOST:-localhost}. It was initiated by <b>${PAM_SERVICE}</b>. Localtime is $(date)"
+
+/usr/bin/curl  --header 'Content-Type: application/json' -X POST --data "{\"chat_id\":\"${CHAT_ID}\",\"text\":\"${SUBJECT}\n${MESSAGE}\"}" "https://api.telegram.org/bot${TOKEN_ID}/sendMessage?parse_mode=html"

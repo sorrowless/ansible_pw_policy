@@ -28,4 +28,9 @@ pwsec_common:
   # Overall - you tell me that defaults are so weak; and I tell you - please,
   # read NIST SP 800-63B Section 5.1.1.2 recommendations first, then we talk.
   # Here is a link for you: https://pages.nist.gov/800-63-3/sp800-63b.html#memsecretver
+  #
+  # Definition of login-notify related vars
+  notify_on_login: false
+  notify_tg_token_id: ""
+  notify_tg_chat_id: ""
 

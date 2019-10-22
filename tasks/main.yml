@@ -51,6 +51,31 @@
     owner: root
     group: root
 
+- name: Ensure login-notify script
+  template:
+    src: login-notify
+    dest: /usr/local/bin/login-notify
+    # it contains private token id, so close for others
+    mode: 0750
+    owner: root
+    group: root
+  when: pwsec.notify_on_login
+  tags:
+    - notify
+
+- name: Ensure notify on login in pam session
+  lineinfile:
+    path: /etc/pam.d/common-session
+    state: present
+    insertafter: EOF
+    line: 'session optional pam_exec.so /usr/local/bin/login-notify'
+    mode: 0644
+    owner: root
+    group: root
+  when: pwsec.notify_on_login
+  tags:
+    - notify
+
 - name: Create temporary dir for security scripts
   tempfile:
     prefix: ansible.sec
@@ -64,7 +89,10 @@
     mode: 0755
     owner: root
     group: root
+  changed_when: False
 
 - name: Run expiration check for existing users
   command: "{{ sec_dir.path }}/check_users.sh {{ pwsec.pass_max_days }} {{ pwsec.pass_warn_age }} {{ ansible_user }}"
-  changed_when: False
+  register: usercheck
+  changed_when: usercheck.rc == 2
+  failed_when: usercheck.rc != 0 and usercheck.rc != 2
