@@ -81,6 +81,7 @@
     prefix: ansible.sec
     state: directory
   register: sec_dir
+  changed_when: false
 
 - name: Copy script to check current users password expiration settings
   copy:
