@@ -13,10 +13,26 @@
     name: "{{ pwsec.packages }}"
     state: present
 
-- name: Ensure common-password file
+- name: Ensure pam_tty_audit file
   template:
-    src: common-password
-    dest: /etc/pam.d/common-password
+    src: pam_tty_audit
+    dest: /usr/share/pam-configs/pam_tty_audit
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Ensure pwhistory file
+  template:
+    src: pwhistory
+    dest: /usr/share/pam-configs/pwhistory
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Ensure pwquality file
+  template:
+    src: pwquality
+    dest: /usr/share/pam-configs/pwquality
     mode: 0644
     owner: root
     group: root
