@@ -21,6 +21,14 @@
     owner: root
     group: root
 
+- name: Ensure pwhistory file
+  template:
+    src: pwhistory
+    dest: /usr/share/pam-configs/pwhistory
+    mode: 0644
+    owner: root
+    group: root
+
 - name: Ensure pwquality file
   template:
     src: pwquality
