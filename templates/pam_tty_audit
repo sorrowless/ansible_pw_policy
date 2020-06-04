@@ -1,0 +1,8 @@
+Name: TTY logging
+Default: yes
+Priority: 1024
+Session-Type: Additional
+Session:
+	required pam_tty_audit.so open_only enable=*
+Session-Initial:
+	required pam_tty_audit.so open_only enable=*
