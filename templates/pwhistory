@@ -1,0 +1,8 @@
+Name: Pwhistory
+Default: yes
+Priority: 1024
+Password-Type: Primary
+Password:
+    required      			pam_pwhistory.so remember={{ pwsec.remember }} use_authtok
+Password-Initial:
+    required      			pam_pwhistory.so remember={{ pwsec.remember }} use_authtok
