@@ -9,11 +9,13 @@
   import_tasks: prechecks.yml
 
 - name: Install needed security packages
+  become: yes
   package:
     name: "{{ pwsec.packages }}"
     state: present
 
 - name: Ensure common-password file
+  become: yes
   template:
     src: common-password
     dest: /etc/pam.d/common-password
@@ -22,6 +24,7 @@
     group: root
 
 - name: Ensure maximum number of days a password may be used
+  become: yes
   lineinfile:
     path: /etc/login.defs
     state: present
@@ -32,6 +35,7 @@
     group: root
 
 - name: Ensure number of days warning given before a password expires
+  become: yes
   lineinfile:
     path: /etc/login.defs
     state: present
@@ -42,6 +46,7 @@
     group: root
 
 - name: Ensure number of days allowed between password changes
+  become: yes
   lineinfile:
     path: /etc/login.defs
     state: present
@@ -52,6 +57,7 @@
     group: root
 
 - name: Ensure login-notify script
+  become: yes
   template:
     src: login-notify
     dest: /usr/local/bin/login-notify
@@ -64,6 +70,7 @@
     - notify
 
 - name: Ensure notify on login in pam session
+  become: yes
   lineinfile:
     path: /etc/pam.d/common-session
     state: present
@@ -77,6 +84,7 @@
     - notify
 
 - name: Create temporary dir for security scripts
+  become: yes
   tempfile:
     prefix: ansible.sec
     state: directory
@@ -84,6 +92,7 @@
   changed_when: false
 
 - name: Copy script to check current users password expiration settings
+  become: yes
   copy:
     src: check_users.sh
     dest: "{{ sec_dir.path }}/check_users.sh"
@@ -93,6 +102,7 @@
   changed_when: False
 
 - name: Run expiration check for existing users
+  become: yes
   command: "{{ sec_dir.path }}/check_users.sh {{ pwsec.pass_max_days }} {{ pwsec.pass_warn_age }} {{ ansible_user }}"
   register: usercheck
   changed_when: usercheck.rc == 2
