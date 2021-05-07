@@ -3,6 +3,7 @@ galaxy_info:
   description: Ansible role to ensure linux passwords policies
   company: Personal project
   role_name: pw_policy
+  namespace: sorrowless
 
   license: Apache
 
@@ -12,6 +13,8 @@ galaxy_info:
   - name: Ubuntu
     versions:
     - xenial
+    - bionic
+    - focal
 
   galaxy_tags: [security, password, policy]
 
