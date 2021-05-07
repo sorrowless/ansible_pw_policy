@@ -2,6 +2,8 @@
 pwsec_host: {}
 pwsec_group: {}
 pwsec_common:
+  # Users which never expires
+  expiration_excluded_users: []
   packages:
     - libpam-pwquality
   local_users_only: true
