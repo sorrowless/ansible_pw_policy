@@ -1,0 +1,6 @@
+Name: Exec notify on login in pam session
+Default: no
+Priority: 0
+Session-Type: Additional
+Session:
+        optional                        pam_exec.so /usr/local/bin/login-notify

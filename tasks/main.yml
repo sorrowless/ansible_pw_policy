@@ -14,15 +14,6 @@
     name: "{{ pwsec.packages }}"
     state: present
 
-- name: Ensure common-password file
-  become: yes
-  template:
-    src: common-password
-    dest: /etc/pam.d/common-password
-    mode: 0644
-    owner: root
-    group: root
-
 - name: Ensure maximum number of days a password may be used
   become: yes
   lineinfile:
@@ -69,19 +60,26 @@
   tags:
     - notify
 
-- name: Ensure notify on login in pam session
+- name: Ensure common-password file
   become: yes
-  lineinfile:
-    path: /etc/pam.d/common-session
-    state: present
-    insertafter: EOF
-    line: 'session optional pam_exec.so /usr/local/bin/login-notify'
+  template:
+    src: "{{ item }}"
+    dest: "/etc/pam.d/{{ item }}"
     mode: 0644
     owner: root
     group: root
-  when: pwsec.notify_on_login
-  tags:
-    - notify
+  with_items:
+    - exec
+    - pwhistory
+    - pwquality
+
+- name: Ensure common-password file
+  become: yes
+  shell: pam-auth-update {%if item.volume%}--enable{%else%}--remove{%endif%} {{item.key}} --force
+  with_dict:
+    exec: "{{ pwsec.notify_on_login }}"
+    pwhistory: "{{ pwsec.password_reuse }}"
+    pwquality: "{{ pwsec.password_strength }}"
 
 - name: Create temporary dir for security scripts
   become: yes

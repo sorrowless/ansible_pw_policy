@@ -1,0 +1,9 @@
+Name: Pwquality password strength checking
+Default: yes
+Priority: 1024
+Conflicts: cracklib
+Password-Type: Primary
+Password:
+        requisite                       pam_pwquality.so {% if pwsec.local_users_only %}local_users_only {% endif -%}retry=3 maxrepeat={{ pwsec.maxrepeat }} maxclassrepeat={{ pwsec.maxclassrepeat }} minclass={{ pwsec.minclass }} minlen={{ pwsec.minlen }} difok={{ pwsec.difok }} try_first_pass
+Password-Initial:
+        requisite                       pam_pwquality.so {% if pwsec.local_users_only %}local_users_only {% endif -%}retry=3 maxrepeat={{ pwsec.maxrepeat }} maxclassrepeat={{ pwsec.maxclassrepeat }} minclass={{ pwsec.minclass }} minlen={{ pwsec.minlen }} difok={{ pwsec.difok }}
