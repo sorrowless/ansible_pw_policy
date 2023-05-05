@@ -60,11 +60,11 @@
   tags:
     - notify
 
-- name: Ensure common-password file
+- name: Ensure profiles for pam-auth-update
   become: yes
   template:
     src: "{{ item }}"
-    dest: "/etc/pam.d/{{ item }}"
+    dest: "/usr/share/pam-configs/{{ item }}"
     mode: 0644
     owner: root
     group: root
@@ -73,9 +73,9 @@
     - pwhistory
     - pwquality
 
-- name: Ensure common-password file
+- name: Ensure pam configuration
   become: yes
-  shell: pam-auth-update {%if item.volume%}--enable{%else%}--remove{%endif%} {{item.key}} --force
+  shell: pam-auth-update {%if item.value%}--enable{%else%}--remove{%endif%} {{item.key}} --force
   with_dict:
     exec: "{{ pwsec.notify_on_login }}"
     pwhistory: "{{ pwsec.password_reuse }}"
