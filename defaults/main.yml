@@ -35,4 +35,5 @@ pwsec_common:
   notify_on_login: false
   notify_tg_token_id: ""
   notify_tg_chat_id: ""
-
+  password_strength: true
+  password_reuse: true

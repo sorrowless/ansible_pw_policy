@@ -1,0 +1,6 @@
+Name: Pwhistory password reuse checking
+Default: yes
+Priority: 1000
+Password-Type: Primary
+Password:
+        required                        pam_pwhistory.so remember={{ pwsec.remember }} use_authtok
