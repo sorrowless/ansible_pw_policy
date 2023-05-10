@@ -1,5 +1,6 @@
 Name: Pwhistory password reuse checking
-Default: yes
+Default: {%if pwsec.password_reuse%}yes{%else%}no{%endif%}
+
 Priority: 1000
 Password-Type: Primary
 Password:

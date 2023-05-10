@@ -1,5 +1,6 @@
 Name: Pwquality password strength checking
-Default: yes
+Default: {%if pwsec.password_strength%}yes{%else%}no{%endif%}
+
 Priority: 1024
 Conflicts: cracklib
 Password-Type: Primary
