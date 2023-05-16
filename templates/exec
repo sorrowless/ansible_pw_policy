@@ -1,5 +1,6 @@
 Name: Exec notify on login in pam session
-Default: no
+Default: {%if pwsec.notify_on_login%}yes{%else%}no{%endif%}
+
 Priority: 0
 Session-Type: Additional
 Session:
