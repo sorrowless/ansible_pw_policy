@@ -3,6 +3,15 @@ TOKEN_ID='{{ pwsec.notify_tg_token_id }}'
 CHAT_ID='{{ pwsec.notify_tg_chat_id }}'
 EXT_IP=$(/usr/bin/curl ifconfig.me)
 EXT_IP_MSG="(external IP ${EXT_IP:-cannot be defined reliably})"
+IGNORE_LIST=({% for s in pwsec.notify_tg_ignored_pam_services %} '{{ s }}' {% endfor %})
+
+
+for item in "${IGNORE_LIST[@]}"
+do
+  if [ "$PAM_SERVICE" == "$item" ]; then
+    exit 0
+  fi
+done
 
 
 SUBJECT="<i>${PAM_TYPE} on ${HOSTNAME} ${EXT_IP_MSG} from ${PAM_RHOST:-localhost}\n</i>"
