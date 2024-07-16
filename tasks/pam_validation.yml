@@ -1,0 +1,47 @@
+---
+- name: Start ssh testing container 
+  delegate_to: localhost
+  docker_compose:
+    state: present
+    project_name: pam-ssh-test
+    definition:
+      version: '2'
+      services:
+        ssh:
+          image: "{{ pwsec_validation_image }}"
+          container_name: pam-validation
+          hostname: pam-validation
+          restart: unless-stopped
+          ports:
+            - "2222:22"
+
+- name: Run all pam tasks for test
+  import_tasks: configure_pam.yml
+  vars:
+    ansible_user: pamtest
+    ansible_ssh_pass: password
+    ansible_sudo_pass: password
+    ansible_host: 127.0.0.1
+    ansible_port: "2222"
+    pwsec_validation: true
+
+- name: Try to become root
+  shell: whoami
+  become: true
+  become_user: root
+  register: whoami
+  vars:
+    ansible_user: pamtest
+    ansible_ssh_pass: password
+    ansible_sudo_pass: password
+    ansible_host: 127.0.0.1
+    ansible_port: "2222"
+
+- debug:
+    msg: "Become result: {{ whoami.stdout }}"
+
+- name: Stop running containers
+  delegate_to: localhost
+  docker_container:
+    name: pam-validation
+    state: absent
