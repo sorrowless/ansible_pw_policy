@@ -1,7 +1,7 @@
 ---
 pwsec_host: {}
 pwsec_group: {}
-pwsec_validation: false
+pwsec_validation: true
 pwsec_validation_image: onemind914/pam-validation-ubuntu-sshd:ubuntu20.04
 pwsec_common:
   # Users which never expires
