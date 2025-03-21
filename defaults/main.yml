@@ -1,7 +1,8 @@
 ---
 pwsec_host: {}
 pwsec_group: {}
-pwsec_validation_image: onemind914/pam-validation-ubuntu-sshd:ubuntu20.04
+# use amd64 tag for linux client and arm64 for macos client
+pwsec_validation_image: xolog/pam-validation-ubuntu-sshd:amd64
 pwsec_common:
   # Users which never expires
   expiration_excluded_users: []
