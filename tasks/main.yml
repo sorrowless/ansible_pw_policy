@@ -2,6 +2,8 @@
 - name: Ensure pam confs is valid
   import_tasks: pam_validation.yml
   run_once: true
+  when: pwsec_validation == true
+
 
 - name: Configure pam
   import_tasks: configure_pam.yml
