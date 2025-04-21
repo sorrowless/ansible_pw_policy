@@ -80,6 +80,11 @@
     exec: "{{ pwsec.notify_on_login }}"
     pwhistory: "{{ pwsec.password_reuse }}"
     pwquality: "{{ pwsec.password_strength }}"
+  register: result
+  retries: 5
+  delay: 10
+  until: result is not failed
+
 
 - name: Create temporary dir for security scripts
   become: yes
