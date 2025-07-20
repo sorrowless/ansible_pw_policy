@@ -114,9 +114,9 @@
 
 - name: Run non-expiration check for existing users
   become: yes
-  script: "exclude_expiration.sh {{ item }}"
+  command: "{{ sec_dir.path }}/exclude_expiration.sh {{ item }}"
   with_items: "{{ pwsec.expiration_excluded_users }}"
   register: usercheck
   changed_when: usercheck.rc == 2
-  failed_when: usercheck.rc != 0 and usercheck.rc != 2
+  failed_when: usercheck.rc not in [0, 2] in usercheck.stdout_lines
   when: not pwsec_validation
